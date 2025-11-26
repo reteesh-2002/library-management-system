@@ -1,0 +1,150 @@
+{% extends 'library/base.html' %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    {% if student.profile_picture %}
+                    <img src="{{ student.profile_picture.url }}" class="rounded-circle mb-3" width="150" height="150"
+                        alt="Profile Picture">
+                    {% else %}
+                    <div class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center mb-3 text-white"
+                        style="width: 150px; height: 150px; font-size: 3rem;">
+                        {{ student.user.first_name|first }}{{ student.user.last_name|first }}
+                    </div>
+                    {% endif %}
+                    <h4>{{ student.user.get_full_name }}</h4>
+                    <p class="text-muted">{{ student.student_id }}</p>
+                    <hr>
+                    <div class="text-start">
+                        <p><strong>Department:</strong> {{ student.department }}</p>
+                        <p><strong>Year:</strong> {{ student.year }}</p>
+                        <p><strong>Email:</strong> {{ student.user.email }}</p>
+                        <p><strong>Phone:</strong> {{ student.phone }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">Fines Due</h5>
+                    <h2 class="text-danger">${{ total_fines }}</h2>
+                    <p class="text-muted small">Please pay at the library counter.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-book-reader me-2"></i>Currently Issued Books</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Book Title</th>
+                                    <th>Issued Date</th>
+                                    <th>Due Date</th>
+                                    <th>Fine</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for issue in issued_books %}
+                                <tr>
+                                    <td>{{ issue.book.title }}</td>
+                                    <td>{{ issue.issued_date|date:"M d, Y" }}</td>
+                                    <td>
+                                        {% if issue.due_date < today %} <span class="text-danger">{{ issue.due_date
+                                            }}</span>
+                                            {% else %}
+                                            {{ issue.due_date }}
+                                            {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if issue.fine_amount > 0 %}
+                                        <span class="text-danger">${{ issue.fine_amount }}</span>
+                                        {% else %}
+                                        -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center">No books currently issued.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-bookmark me-2"></i>Active Reservations</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Book Title</th>
+                                    <th>Reserved Date</th>
+                                    <th>Expires On</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for reservation in reservations %}
+                                <tr>
+                                    <td>{{ reservation.book.title }}</td>
+                                    <td>{{ reservation.reservation_date|date:"M d, Y" }}</td>
+                                    <td>{{ reservation.expiry_date|date:"M d, Y" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center">No active reservations.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-history me-2"></i>Reading History</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Book Title</th>
+                                    <th>Returned Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for history in book_history %}
+                                <tr>
+                                    <td>{{ history.book.title }}</td>
+                                    <td>{{ history.return_date }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="2" class="text-center">No reading history yet.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

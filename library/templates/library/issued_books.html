@@ -1,0 +1,125 @@
+{% extends 'library/base.html' %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Issued Books</h2>
+        <a href="/issue_book/" class="btn btn-primary"><i class="fas fa-plus me-2"></i>Issue New Book</a>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="search"
+                        placeholder="Search by book title or student ID" value="{{ search_query }}">
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" name="status">
+                        <option value="active" {% if status_filter=='active' %}selected{% endif %}>Active Issues
+                        </option>
+                        <option value="returned" {% if status_filter=='returned' %}selected{% endif %}>Returned History
+                        </option>
+                        <option value="all" {% if status_filter=='all' %}selected{% endif %}>All Records</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-secondary w-100">Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>Book Title</th>
+                            <th>Student</th>
+                            <th>Issued Date</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Fine</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for issue in page_obj %}
+                        <tr>
+                            <td>{{ issue.book.title }}</td>
+                            <td>{{ issue.student.student_id }}<br><small class="text-muted">{{
+                                    issue.student.user.get_full_name }}</small></td>
+                            <td>{{ issue.issued_date|date:"M d, Y" }}</td>
+                            <td>{{ issue.due_date|date:"M d, Y" }}</td>
+                            <td>
+                                {% if issue.is_returned %}
+                                <span class="badge bg-success">Returned</span>
+                                <br><small class="text-muted">{{ issue.return_date|date:"M d, Y" }}</small>
+                                {% else %}
+                                {% if issue.due_date < today %} <span class="badge bg-danger">Overdue</span>
+                                    {% else %}
+                                    <span class="badge bg-primary">Active</span>
+                                    {% endif %}
+                                    {% endif %}
+                            </td>
+                            <td>
+                                {% if issue.fine_amount > 0 %}
+                                <span class="text-danger fw-bold">${{ issue.fine_amount }}</span>
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if not issue.is_returned %}
+                                <a href="/return_book/{{ issue.id }}/" class="btn btn-sm btn-success"
+                                    onclick="return confirm('Confirm return of this book?')">Return</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-4">No records found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-white">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center mb-0">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">&laquo;
+                            First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">Previous</a>
+                    </li>
+                    {% endif %}
+
+                    <li class="page-item disabled">
+                        <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    </li>
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">Last
+                            &raquo;</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+{% endblock %}

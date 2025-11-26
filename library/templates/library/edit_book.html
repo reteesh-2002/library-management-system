@@ -1,0 +1,106 @@
+{% extends 'library/base.html' %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0">Edit Book</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="isbn" class="form-label">ISBN</label>
+                                <input type="text" class="form-control" id="isbn" name="isbn" value="{{ book.isbn }}"
+                                    required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="category" class="form-label">Category</label>
+                                <select class="form-select" id="category" name="category" required>
+                                    <option value="">Select Category</option>
+                                    <option value="Fiction" {% if book.category=='Fiction' %}selected{% endif %}>Fiction
+                                    </option>
+                                    <option value="Non-Fiction" {% if book.category=='Non-Fiction' %}selected{% endif
+                                        %}>Non-Fiction</option>
+                                    <option value="Science" {% if book.category=='Science' %}selected{% endif %}>Science
+                                    </option>
+                                    <option value="Technology" {% if book.category=='Technology' %}selected{% endif %}>
+                                        Technology</option>
+                                    <option value="History" {% if book.category=='History' %}selected{% endif %}>History
+                                    </option>
+                                    <option value="Biography" {% if book.category=='Biography' %}selected{% endif %}>
+                                        Biography</option>
+                                    <option value="Self-Help" {% if book.category=='Self-Help' %}selected{% endif %}>
+                                        Self-Help</option>
+                                    <option value="Business" {% if book.category=='Business' %}selected{% endif %}>
+                                        Business</option>
+                                    <option value="Arts" {% if book.category=='Arts' %}selected{% endif %}>Arts</option>
+                                    <option value="Other" {% if book.category=='Other' %}selected{% endif %}>Other
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Book Title</label>
+                            <input type="text" class="form-control" id="title" name="title" value="{{ book.title }}"
+                                required>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="author" class="form-label">Author</label>
+                                <input type="text" class="form-control" id="author" name="author"
+                                    value="{{ book.author }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="publisher" class="form-label">Publisher</label>
+                                <input type="text" class="form-control" id="publisher" name="publisher"
+                                    value="{{ book.publisher }}" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="publication_date" class="form-label">Publication Date</label>
+                                <input type="date" class="form-control" id="publication_date" name="publication_date"
+                                    value="{{ book.publication_date|date:'Y-m-d' }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="total_copies" class="form-label">Total Copies</label>
+                                <input type="number" class="form-control" id="total_copies" name="total_copies" min="1"
+                                    value="{{ book.total_copies }}" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description"
+                                rows="3">{{ book.description }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="cover_image" class="form-label">Cover Image</label>
+                            {% if book.cover_image %}
+                            <div class="mb-2">
+                                <img src="{{ book.cover_image.url }}" alt="Current Cover" height="100">
+                            </div>
+                            {% endif %}
+                            <input type="file" class="form-control" id="cover_image" name="cover_image"
+                                accept="image/*">
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="/view_books/" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Update Book</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

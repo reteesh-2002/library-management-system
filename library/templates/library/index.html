@@ -1,0 +1,94 @@
+{% extends 'library/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-6">
+            <h1 class="display-4 fw-bold text-primary">Welcome to LMS</h1>
+            <p class="lead text-muted">Your gateway to knowledge. Manage, explore, and discover books with our advanced
+                Library Management System.</p>
+            <div class="d-flex gap-3">
+                <a href="/search_books/" class="btn btn-primary btn-lg"><i class="fas fa-search me-2"></i>Search
+                    Books</a>
+                {% if not user.is_authenticated %}
+                <a href="/student_login/" class="btn btn-outline-primary btn-lg">Student Login</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="row g-3">
+                <div class="col-6">
+                    <div class="card bg-primary text-white p-4 h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-book fa-3x mb-3"></i>
+                            <h3 class="display-6">{{ total_books }}</h3>
+                            <p class="mb-0">Total Books</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card bg-success text-white p-4 h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-users fa-3x mb-3"></i>
+                            <h3 class="display-6">{{ total_students }}</h3>
+                            <p class="mb-0">Students</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card bg-warning text-white p-4 h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-book-reader fa-3x mb-3"></i>
+                            <h3 class="display-6">{{ issued_books }}</h3>
+                            <p class="mb-0">Books Issued</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card bg-info text-white p-4 h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-check-circle fa-3x mb-3"></i>
+                            <h3 class="display-6">{{ available_books.total|default:0 }}</h3>
+                            <p class="mb-0">Available</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-5">
+                    <div class="mb-4">
+                        <span class="fa-stack fa-3x text-primary">
+                            <i class="fas fa-circle fa-stack-2x opacity-25"></i>
+                            <i class="fas fa-user-shield fa-stack-1x"></i>
+                        </span>
+                    </div>
+                    <h3>Librarian Portal</h3>
+                    <p class="text-muted">Manage books, students, issues, and returns efficiently.</p>
+                    <a href="/admin_login/" class="btn btn-primary">Access Portal</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-5">
+                    <div class="mb-4">
+                        <span class="fa-stack fa-3x text-success">
+                            <i class="fas fa-circle fa-stack-2x opacity-25"></i>
+                            <i class="fas fa-user-graduate fa-stack-1x"></i>
+                        </span>
+                    </div>
+                    <h3>Student Portal</h3>
+                    <p class="text-muted">Check your issued books, history, and reserve new books.</p>
+                    <a href="/student_login/" class="btn btn-success">Student Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

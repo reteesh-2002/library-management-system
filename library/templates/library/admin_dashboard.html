@@ -1,0 +1,151 @@
+{% extends 'library/base.html' %}
+
+{% block body %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <div class="list-group shadow-sm">
+                <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                </a>
+                <a href="/view_books/" class="list-group-item list-group-item-action"><i class="fas fa-book me-2"></i>
+                    Manage Books</a>
+                <a href="/view_students/" class="list-group-item list-group-item-action"><i
+                        class="fas fa-users me-2"></i> Manage Students</a>
+                <a href="/issue_book/" class="list-group-item list-group-item-action"><i
+                        class="fas fa-hand-holding-book me-2"></i> Issue Book</a>
+                <a href="/issued_books/" class="list-group-item list-group-item-action"><i class="fas fa-list me-2"></i>
+                    Issued Books</a>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <h2 class="mb-4">Admin Dashboard</h2>
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title mb-0">Total Books</h6>
+                                    <h2 class="mt-2 mb-0">{{ total_books }}</h2>
+                                </div>
+                                <i class="fas fa-book fa-2x opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success text-white h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title mb-0">Total Students</h6>
+                                    <h2 class="mt-2 mb-0">{{ total_students }}</h2>
+                                </div>
+                                <i class="fas fa-users fa-2x opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning text-white h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title mb-0">Issued Books</h6>
+                                    <h2 class="mt-2 mb-0">{{ issued_books }}</h2>
+                                </div>
+                                <i class="fas fa-book-reader fa-2x opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-danger text-white h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title mb-0">Overdue Books</h6>
+                                    <h2 class="mt-2 mb-0">{{ overdue_books }}</h2>
+                                </div>
+                                <i class="fas fa-exclamation-circle fa-2x opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Recently Added Books</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Author</th>
+                                            <th>Category</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for book in recent_books %}
+                                        <tr>
+                                            <td>{{ book.title }}</td>
+                                            <td>{{ book.author }}</td>
+                                            <td><span class="badge bg-secondary">{{ book.category }}</span></td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="3" class="text-center">No books added yet.</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Recent Issues</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Book</th>
+                                            <th>Student</th>
+                                            <th>Due Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for issue in recent_issues %}
+                                        <tr>
+                                            <td>{{ issue.book.title }}</td>
+                                            <td>{{ issue.student.student_id }}</td>
+                                            <td>{{ issue.due_date }}</td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="3" class="text-center">No active issues.</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

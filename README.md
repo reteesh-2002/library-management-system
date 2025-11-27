@@ -2,7 +2,7 @@
 
 1. **Navigate to the project directory**:
    ```bash
-   cd /home/redark/Downloads/library-management-system
+   cd library-management-system
    ```
 
 2. **Create a virtual environment**:
